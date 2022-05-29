@@ -1,0 +1,23 @@
+module mux(sel,y);
+	input sel;
+  	output reg [6:0] y;
+	always@(sel)
+	case(sel)
+		0:y=7'b0000000;
+	    1:y=7'b1001001;
+	    default: $display("Error in MUX Select!");
+	endcase
+endmodule
+
+module testbench;
+    reg sel;
+    wire[6:0] y;
+    mux test(sel,y);
+    initial begin
+        sel<=0;
+        #10 $display("sel=%b\ty=%b",sel,y);
+        sel<=1;
+        #10 $display("sel=%b\ty=%b",sel,y);
+        $finish;
+    end
+endmodule
