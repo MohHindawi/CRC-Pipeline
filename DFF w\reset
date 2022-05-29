@@ -1,0 +1,65 @@
+module dff(d,rst,clk,q,qbar);
+    input d,rst,clk;
+    output reg q,qbar;
+    always@(posedge clk or posedge rst)
+    begin
+        if(rst==1)
+        begin
+            q<=0;
+            qbar<=1;
+        end
+        else if(d==0)
+        begin
+            q<=0;
+            qbar<=1;
+        end
+        else if(d==1)
+        begin
+            q<=1;
+            qbar<=0;
+        end
+    end
+endmodule
+
+module testbench;
+reg dd,reset,clock=0;
+wire qq,qqbar;
+dff t3(dd,reset,clock,qq,qqbar);
+always #10 clock = ~clock;
+initial begin
+        dd=0;reset=0;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=0;reset=0;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=0;reset=1;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=0;reset=1;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=1;reset=0;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=1;reset=0;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=1;reset=1;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=1;reset=1;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+        $display("\n");
+    #5 dd=0;reset=0;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=0;reset=0;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=0;reset=1;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=0;reset=1;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=1;reset=0;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=1;reset=0;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=1;reset=1;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #5 dd=1;reset=1;
+    #5 $display("D = %b, Reset = %b, Clock = %b, Q = %b, Qbar = %b",dd,reset,clock,qq,qqbar);
+    #10 $finish;
+end
+endmodule
