@@ -1,0 +1,37 @@
+module dff(d,clk,q,qbar);
+	input d,clk;
+	output q,qbar;
+	wire dbar,x,y;
+	not(dbar,d);
+	nand(x,clk,d);
+	nand(y,clk,dbar);
+	nand(q,qbar,x);
+	nand(qbar,q,y);
+endmodule
+
+module testbench;
+reg dd,clock=0;
+wire qq,qqbar;
+dff t3(dd,clock,qq,qqbar);
+always #10 clock = ~clock;
+initial begin
+       dd=0;
+    #5 $display("D = %b, Clock = %b, Q = %b, Qbar = %b",dd,clock,qq,qqbar);
+    #5 dd=0;
+    #5 $display("D = %b, Clock = %b, Q = %b, Qbar = %b",dd,clock,qq,qqbar);
+    #5 dd=1;
+    #5 $display("D = %b, Clock = %b, Q = %b, Qbar = %b",dd,clock,qq,qqbar);
+    #5 dd=1;
+    #5 $display("D = %b, Clock = %b, Q = %b, Qbar = %b",dd,clock,qq,qqbar);
+       $display("\n");
+    #5 dd=0;
+    #5 $display("D = %b, Clock = %b, Q = %b, Qbar = %b",dd,clock,qq,qqbar);
+    #5 dd=0;
+    #5 $display("D = %b, Clock = %b, Q = %b, Qbar = %b",dd,clock,qq,qqbar);
+    #5 dd=1;
+    #5 $display("D = %b, Clock = %b, Q = %b, Qbar = %b",dd,clock,qq,qqbar);
+    #5 dd=1;
+    #5 $display("D = %b, Clock = %b, Q = %b, Qbar = %b",dd,clock,qq,qqbar);
+    #5 $finish;
+end
+endmodule
