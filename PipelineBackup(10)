@@ -1,0 +1,129 @@
+/*module mux(sel,y);
+	input sel;
+  	output reg [6:0] y;
+	always@(sel)
+	case(sel)
+		0:y=7'b0000000;
+	    1:y=7'b1001001;
+	    default: $display("Error in MUX Select!");
+	endcase
+endmodule*/
+/////////////////////
+module pipe(D,clk1,clk2,F);
+  parameter N = 7;
+  input reg [N-1:0] D; 
+  input clk1, clk2;
+  output [N-1:0] F;
+  reg [N-1:0] L12,L23,L34,L45,L56,L67,L78;
+  reg [N-1:0] w1,w2,w3,w4,w5,w6,w7;
+  assign F = L78;
+  //assign D={D,6'b000000};
+      //Stage 1
+  always @ (posedge clk1)
+        begin
+          //mux m1(D[6],w1);
+          if(D[6]==0)
+            w1=7'b0000000;
+          else
+            w1=7'b1001001;
+          L12 <= #10 D ^ w1;
+        end
+      //Stage 2    
+  always @ (posedge clk2)
+        begin
+          assign L12 = {L12,1'b0};
+          //mux m2(L12[6],w2);
+          if(L12[6]==0)
+            w2=7'b0000000;
+          else
+            w2=7'b1001001;
+          L23 <= #10 L12 ^ w2;
+        end
+      //Stage 3   
+  always @ (posedge clk1)
+        begin
+          assign L23 = {L23,1'b0};
+          //mux m3(L23[6],w3);
+          if(L23[6]==0)
+            w3=7'b0000000;
+          else
+            w3=7'b1001001;
+          L34 <= #10 L23 ^ w3;
+        end
+      //Stage 4   
+  always @ (posedge clk2)
+        begin
+          assign L34 = {L34,1'b0};
+          //mux m4(L34[6],w4);
+          if(L34[6]==0)
+            w4=7'b0000000;
+          else
+            w4=7'b1001001;
+          L45 <= #10 L34 ^ w4;
+        end
+      //Stage 5   
+  always @ (posedge clk1)
+        begin
+          assign L45 = {L45,1'b0};
+          //mux m5(L45[6],w5);
+          if(L45[6]==0)
+            w5=7'b0000000;
+          else
+            w5=7'b1001001;
+          L56 <= #10 L45 ^ w5;
+        end
+      //Stage 6      
+  always @ (posedge clk2)
+        begin
+          assign L56 = {L56,1'b0};
+          //mux m6(L56[6],w6);
+          if(L56[6]==0)
+            w6=7'b0000000;
+          else
+            w6=7'b1001001;
+          L67 <= #10 L56 ^ w6;
+        end
+      //Stage 7    
+  always @ (posedge clk1)
+        begin
+          assign L67 = {L67,1'b0};
+          //mux m7(L67[6],w7);
+          if(L67[6]==0)
+            w7=7'b0000000;
+          else
+            w7=7'b1001001;
+          L78 <= #10 L67 ^ w7;
+        end
+endmodule
+
+module testbench;
+  parameter N = 7;
+  wire [N-1:0] F;
+  reg [N-1:0] D;
+  reg clk1,clk2;
+  pipe test(D,clk1,clk2,F);
+  initial begin
+    clk1=0; clk2=0;
+    repeat(20)
+      begin
+        #10
+        #10 clk1=1; #10 clk1=0;
+        #10 clk2=1; #10 clk2=0;
+      end
+  end
+  initial begin
+    #10  D=1010101;
+    #50 D=0000000;
+    #50 D=1111111;
+    #50 D=1110000;
+    #50 D=1101101;
+    #50 D=0110111;
+    #50 D=1001011;
+  end
+  initial begin
+    $dumpfile("Pipeline (1).vcd");
+    $dumpvars(0,testbench);
+    $monitor("Time: %d, F = %d", $time, F);
+    #500 $finish;
+  end
+endmodule
