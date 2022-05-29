@@ -1,0 +1,27 @@
+module mux(a,b,sel,y);
+	input a,b,sel;
+	output reg y;
+	always@(a or b or sel)
+	case(sel)
+		0:y=a;
+	    	1:y=b;
+	    	default: $display("Error in MUX Select!");
+	endcase
+endmodule
+
+module testbench;
+	reg a_t,b_t,sel_t;
+	wire y_t;
+	mux t1(a_t,b_t,sel_t,y_t);
+	initial begin
+		a_t<=0;b_t<=1;
+		sel_t<=0;
+		#10 $display("Select = %b, Output = %b",sel_t,y_t);
+		sel_t<=1;
+		#10 $display("Select = %b, Output = %b",sel_t,y_t);
+		sel_t<='bz;
+		#10 $display("Select = %b, Output = %b",sel_t,y_t);
+		sel_t<='bx;
+		#10 $display("Select = %b, Output = %b",sel_t,y_t);
+	end
+endmodule
