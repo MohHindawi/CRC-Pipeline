@@ -1,0 +1,91 @@
+module pipe(D,clk,F);
+  parameter N = 7;
+  input reg [N-1:0] D; 
+  input clk;
+  output [N-1:0] F;
+  reg [N-1:0] L12,L23,L34,L45,L56,L67,L78;
+  reg [N-1:0] w1,w2,w3,w4,w5,w6,w7;
+  assign F = L78;
+  always @ (posedge clk)
+    begin
+  //Stage 1
+          //mux m1(D[6],w1);
+          if(D[6]==0)
+            w1=7'b0000000;
+          else
+            w1=7'b1001001;
+          L12 = #5 D ^ w1;
+  //Stage 2
+          L12 = {L12,1'b0};
+          //mux m2(L12[6],w2);
+          if(L12[6]==0)
+            w2=7'b0000000;
+          else
+            w2=7'b1001001;
+          L23 = #5 L12 ^ w2;
+  //Stage 3   
+          L23 = {L23,1'b0};
+          //mux m3(L23[6],w3);
+          if(L23[6]==0)
+            w3=7'b0000000;
+          else
+            w3=7'b1001001;
+          L34 = #5 L23 ^ w3;
+  //Stage 4   
+          L34 = {L34,1'b0};
+          //mux m4(L34[6],w4);
+          if(L34[6]==0)
+            w4=7'b0000000;
+          else
+            w4=7'b1001001;
+          L45 = #5 L34 ^ w4;
+  //Stage 5   
+          L45 = {L45,1'b0};
+          //mux m5(L45[6],w5);
+          if(L45[6]==0)
+            w5=7'b0000000;
+          else
+            w5=7'b1001001;
+          L56 = #5 L45 ^ w5;
+  //Stage 6      
+          L56 = {L56,1'b0};
+          //mux m6(L56[6],w6);
+          if(L56[6]==0)
+            w6=7'b0000000;
+          else
+            w6=7'b1001001;
+          L67 = #5 L56 ^ w6;
+  //Stage 7    
+          L67 = {L67,1'b0};
+          //mux m7(L67[6],w7);
+          if(L67[6]==0)
+            w7=7'b0000000;
+          else
+            w7=7'b1001001;
+          L78 = #5 L67 ^ w7;
+        end
+endmodule
+
+module testbench;
+  parameter N = 7;
+  wire [N-1:0] F;
+  reg [N-1:0] D;
+  reg clk=0;
+  pipe test(D,clk,F);
+  always #20 clk = ~clk;
+  initial begin   
+    #10 D=7'b1010101;
+    #40 D=7'b0000000;
+    #40 D=7'b1111111;
+    #40 D=7'b1110000;
+    #40 D=7'b1101101;
+    #40 D=7'b0110111;
+    #40 D=7'b1001011;
+  end
+  initial begin
+    $dumpfile("Pipeline (1).vcd");
+    $dumpvars(0,testbench);
+    $monitor("Time: %d, F = %d", $time, F);
+    #500 $finish;
+  end
+endmodule
