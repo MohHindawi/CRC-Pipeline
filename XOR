@@ -1,0 +1,21 @@
+module xor_gate(a,b,y);
+	input a,b;
+	output y;
+	xor(y,a,b);
+endmodule
+
+module testbench;
+	reg a_t,b_t;
+	wire y_t;
+	xor_gate t2(a_t,b_t,y_t);
+	initial begin
+		a_t<=0;b_t<=0;
+		#10 $display("Input = %b%b, Output = %b",a_t,b_t,y_t);
+		a_t<=0;b_t<=1;
+		#10 $display("Input = %b%b, Output = %b",a_t,b_t,y_t);
+		a_t<=1;b_t<=0;
+		#10 $display("Input = %b%b, Output = %b",a_t,b_t,y_t);
+		a_t<=1;b_t<=1;
+		#10 $display("Input = %b%b, Output = %b",a_t,b_t,y_t);
+	end
+endmodule
